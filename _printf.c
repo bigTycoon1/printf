@@ -1,7 +1,7 @@
 #include "main.h"
 /**
  *get_func - This function get format for _printf to
- call other functions
+ *call other functions
  *@format: character string
  *Return:NULL or the function called
  */
