@@ -1,5 +1,37 @@
 #include "main.h"
 /**
+ *get_func - This function get format for _printf to
+ call other functions
+ *@format: character string
+ *Return:NULL or the function called
+ */
+int (*get_func(const char *format))(va_list)
+{
+	unsigned int i = 0;
+	code_f get_f[] = {
+		{"c", print_char},
+		{"s", print_string},
+		{"i", print_int},
+		{"d", print_dec},
+		{"r", print_rev},
+		{"b", print_bin},
+		{"u", print_unsig},
+		{"o", print_octal},
+		{"x", print_x},
+		{"X", print_X},
+		{"R", print_rot13},
+		{NULL, NULL}
+	};
+
+	while (get_f[i].sc)
+	{
+		if (get_f[i].sc[0] == (*format))
+			return (get_f[i].f);
+		i++;
+	}
+	return (NULL);
+}
+/**
  *_printf - This function that produces output according to a format
  *@format: character string
  *Return:the number of characters printed
@@ -7,43 +39,39 @@
  */
 int _printf(const char *format, ...)
 {
-	va_list arg;
-	int count = 0;
+	va_list ap;
+	int (*f)(va_list);
+	unsigned int i = 0, cp = 0;
 
-	va_start(arg, format);
-	while (*format)
+	if (format == NULL)
+		return (-1);
+	va_start(ap, format);
+	while (format[i])
 	{
-		if (*format == '%')
-			format++;
-		if (*format == 'c')
+		while (format[i] != '%' && format[i])
 		{
-			char c = (char)va_arg(arg, int);
-
-			_putchar(c);
-			count++;
+			_putchar(format[i]);
+			cp++;
+			i++;
 		}
-		else if (*format == 's')
+		if (format[i] == '\0')
+			return (cp);
+		f = get_func(&format[i + 1]);
+		if (f != NULL)
 		{
-			char *str = va_arg(arg, char*);
-
-			while (*str)
-			{
-				_putchar(*str++);
-				count++;
-			}
+			cp += f(ap);
+			i += 2;
+			continue;
 		}
-		else if (*format == '%')
-		{
-			_putchar('%');
-			count++;
-		}
+		if (!format[i + 1])
+			return (-1);
+		_putchar(format[i]);
+		cp++;
+		if (format[i + 1] == '%')
+			i += 2;
 		else
-		{
-			_putchar(*format);
-			count++;
-		}
-		format++;
+			i++;
 	}
-	va_end(arg);
-	return (count);
+	va_end(ap);
+	return (cp);
 }
