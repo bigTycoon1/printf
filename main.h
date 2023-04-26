@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
-int _putchar(char s);
+#include <limits.h>
+
+int _putchar(int c);
 int _strlen(char *s);
 int _printf(const char *format, ...);
 #endif /* MAIN_H */
