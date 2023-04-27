@@ -15,8 +15,8 @@
   */
 typedef struct code_format
 {
-        char *sc;
-        int (*f)(va_list);
+	char *sc;
+	int (*f)(va_list);
 } code_f;
 
 int _putchar(char c);
